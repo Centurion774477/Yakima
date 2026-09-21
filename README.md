@@ -27,7 +27,7 @@ Unicode: U+00B0
 
 Writing to STDOUT:
 
-`write_output(“hi");`
+`write_output("hi");`
 
 This, naturally, will return a string.
 
@@ -188,4 +188,4 @@ when EXCEPTIONcode {
 }
 ```
 
-
+Purified using [Murman](https://github.com/Centurion774477/Murman)
