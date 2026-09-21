@@ -11,7 +11,6 @@ class Parser
   # this will need to be refactored to support nesting
 
   def parse token, output_language, line_number
-    # refactor every other function call to use send()
     # remember to turn =/= into !=
     # PHP should also be !== instead for strict comparison
 
@@ -49,7 +48,7 @@ class Parser
       return send("#{output_language}GenerateFunctionCall", token[:function_name], token[:arguments])
 
     when :function_declaration
-      return send("#{output_language}GenerateFunctionDeclaration", token [:function_name], token[:arguments])
+      return send("#{output_language}GenerateFunctionDeclaration", token [:function_name], token[:arguments], token[:return_type])
 
     when :while_loop
       return send("#{output_language}GenerateWhileLoop", token[:condition])

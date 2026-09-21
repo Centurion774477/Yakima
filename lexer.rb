@@ -1,7 +1,7 @@
 
 
 def getLines file
-  unless File.exist?(file)
+  unless File.exist? file
     puts "The given file doesn't exist in this context: #{file}"
     exit
   end
@@ -9,13 +9,12 @@ def getLines file
   lines = nil
 
   begin
-    lines = File.readlines(file)
+    lines = File.readlines file
   rescue => error
     puts "Failed to read the file #{file}. Error: #{error}"
   end
 
   return lines
-
 end
 
 def getExpressions line
@@ -75,11 +74,12 @@ def lex expression
       function_name: $~[:function_name],
       arguments: $~[:arguments_list]
     }
-  when /fn\s+(?<function_name>.*)\((?<arguments_list>.*?)\)\:/
+  when /fn\s+(?<function_name>.*)\((?<arguments_list>.*?)\)\s+=>\s+(?<return_type>(boolean|int|uint|string|char))\:/
     {
       type: :function_declaration,
       function_name: $~[:function_name],
       arguments: $~[:arguments_list],
+      return_type: $~[:return_type]
     }
   when /while\s+(?<condition>.*)\s+do/
     {

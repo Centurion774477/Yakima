@@ -74,8 +74,8 @@ def phpGenerateForLoop initialization, condition, update
   # NEEDS TESTING
   <<-END
   $#{initialization};
-  while ($#{condition}) {
-    $#{update}
+  while ($#{condition.lstrip()}) {
+  $#{update}
   END
 end
 

@@ -42,14 +42,17 @@ def csGenerateInferredVariable name, value
 end
 
 def csGenerateFunctionCall name, arguments
+  return "Console.WriteLine(#{arguments});" if name == "write_output"
+  return "Console.ReadLine();" if name == "read_stdin"
+
   <<-END
   name(#{arguments});
   END
 end
 
-def csGenerateFunctionDeclaration name, arguments
+def csGenerateFunctionDeclaration name, arguments, return_type
   <<-END
-  
+  public #{return_type} #{name}(#{arguments}) {
   END
 end
 
@@ -73,13 +76,14 @@ end
 
 def csGenerateImport package
   <<-END
-  
+  using #{package};
   END
 end
 
 def csGenerateImportFrom package, thing
+  # I don't think C# has an import x from y feature
   <<-END
-  
+  using #{package};
   END
 end
 
@@ -116,7 +120,7 @@ def csGenerateMethod variable, method
   transpiledMethod = transpileMethodIntoCsharp method
 
   return <<-END
-    #{variable}.#{transpiledMethod}
+    #{variable}.#{transpiledMethod};
   END
 end
 
