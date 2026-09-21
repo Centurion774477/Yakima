@@ -13,17 +13,20 @@ class Parser
   def parse token, output_language, line_number
     # refactor every other function call to use send()
     # remember to turn =/= into !=
+    # PHP should also be !== instead for strict comparison
 
     # puts "DEBUG:"
     # pp token
     # puts token[:type]
 
-
     snippet = case token[:type]
     when :comment
       return send("#{output_language}GenerateComment", token[:comment])
     when :variable_creation
-      fail "Invalid type assigned to #{token[:name]}: #{token[:var_type]} on line ~#{line_number}" unless @recognized_types.include?(token[:var_type])
+      unless @recognized_types.include?(token[:var_type])
+        puts "Invalid type assigned to #{token[:name]}: #{token[:var_type]} on line ~#{line_number}" 
+        exit
+      end
 
       return send("#{output_language}GenerateVariable", token[:var_type], token[:name], token[:value])
 
@@ -61,24 +64,25 @@ class Parser
       return send("#{output_language}GenerateImport", token[:package])
 
     when :import_as
-      return csGenerateImportFrom token[:package], token[:thing]
-
+      return send("#{output_language}GenerateImportFrom", token[:package], token[:thing])
 
     when :method
-      newMethod = lexMethod token[:method]
-      return csGenerateMethod token[:variable], newMethod, token[:arguments]
+      return send("#{output_language}GenerateMethod", token[:variable], token[:method], token[:arguments])
 
-    when :open_attempt_block
-      return csGenerateAttempt
+    when :open_attempt_block      
+      return send("#{output_language}GenerateAttempt")
 
     when :unnamed_when_arm
-      return csGenerateCatchException token[:exception]
+      return send("#{output_language}GenerateCatchException", token[:exception])
 
     when :named_when_arm
-      return csGenerateNamedException token[:exception], token[:name]
+      return send("#{output_language}GenerateNamedException", token[:exception], token[:name])
 
-    else
+    when :blank_line
       return "\n"
+    else
+      puts "Unrecognized token on line #{line_number}: #{token}"
+      exit
     end
     
     return snippet

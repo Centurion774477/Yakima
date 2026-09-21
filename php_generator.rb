@@ -1,12 +1,12 @@
 
 def phpGenerateComment comment
   <<-END
-    // #{comment}
+    # #{comment}
   END
 end
 
 def phpGenerateVariable type, name, value
-  # type isn't used but it's needed
+  # type isn't used but it's needed in the C# version and the parser doesn't know which one is going to be called
   <<-END
   $#{name} = #{value};
   END
@@ -86,11 +86,11 @@ def phpGenerateForeachLoop iterator, array
 end
 
 def phpGenerateImport package
-  return "\n" # doesn't exist in PHP
+  return "// PHP doesn't have imports! -- Fortevom" # doesn't exist in PHP
 end
 
 def phpGenerateImportFrom package, thing
-  return "\n" # doesn't exist in PHP either
+  return "// PHP doesn't have imports! -- Fortevom" # doesn't exist in PHP either
 end
 
 def transpileMethod method, variable, arguments

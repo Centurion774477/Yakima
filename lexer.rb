@@ -1,22 +1,29 @@
 
 
 def getLines file
-  File.exist?(file) or fail "The given file doesn't exist in this context: #{file}"
+  unless File.exist?(file)
+    puts "The given file doesn't exist in this context: #{file}"
+    exit
+  end
+
   lines = nil
+
   begin
     lines = File.readlines(file)
   rescue => error
     puts "Failed to read the file #{file}. Error: #{error}"
   end
+
   return lines
+
 end
 
 def getExpressions line
+  # split each line by semicolons
   return line.split(';').map { |expr| expr.strip.split.join(' ') }
 end
 
-# eventually we can swap this out with a more complex lexer
-# returns a dictionary containing the data about the given expression
+# returns a hash containing the data about the given expression
 def lex expression
   return case expression
   when /°(?<comment>.*)/
@@ -123,10 +130,6 @@ def lex expression
       type: :blank_line
     }
   end
-end
-
-def lexMethod method
-  
 end
 
 # debug
