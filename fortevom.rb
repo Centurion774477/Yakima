@@ -18,14 +18,21 @@ unless %w|lex parse compile transpile render digest|.include?(command)
     puts "Invalid command: #{command}"
     exit
   end
-
 end
 
-raise "You must provide a file"             if file_given.nil?
-raise "You must provide an output language" if output_language.nil? && command != "lex"
+if file_given.nil?
+  puts "You must provide a file."
+  exit
+end
+
+# lex doesn't require an output language because the lexer is language-agnostic
+if output_language.nil? && command != "lex"
+  puts "You must provide an output language"
+  exit
+end
 
 unless %w|cs php|.include?(output_language) && command != "lex"
-  puts "Invalid output language provided. Only use 'cs' to output C# or 'php' to output PHP."
+  puts "Invalid output language provided: #{output_language}. Only use 'cs' to output C# or 'php' to output PHP."
   exit
 end
 
@@ -50,7 +57,7 @@ def compile file, output_language
   parser           = Parser.new()
   file_to_write_to = output_language == "php" ? "#{File.basename(file)}.php" : "#{File.basename(file)}.cs"
   lines            = getLines file
-  line_number      = 0 # a rough approximate because it will be skewed if you have multiple expressions on one line
+  line_number      = 0 # a rough approximate as it will be skewed if you have multiple expressions on one line
 
   lines.each do |line|
     line_number += 1
@@ -114,10 +121,10 @@ def onlyParse file, language
   snippets.each { |snippet| puts snippet }
 end
 
-
 def orchestrate file_given, output_language
   output_file = compile file_given, output_language
 
+  # if the output file exists and isn't empty
   unless File.zero?(output_file)
     puts <<~END
       Notice:
@@ -137,9 +144,6 @@ case command
 when "transpile", "render", "digest" then orchestrate(file_given, output_language)
 when "lex"                           then onlyLex(file_given)
 when "parse"                         then onlyParse(file_given, output_language)
-
 end
-
-
 
 

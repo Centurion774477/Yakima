@@ -93,7 +93,7 @@ def phpGenerateImportFrom package, thing
   return "// PHP doesn't have imports! -- Fortevom" # doesn't exist in PHP either
 end
 
-def transpileMethod method, variable, arguments
+def transpileMethodIntoPhp method
   return case method
   when "length"   then "count"
   when "pushTAIL" then "array_push"
@@ -101,13 +101,18 @@ def transpileMethod method, variable, arguments
   when "find"     then "array_search"
   when "head"     then "array_last"
   when "tail"     then "array_first"
+  else method # assume that the method is some other PHP method instead of throwing an error
   end
 end
 
 def phpGenerateMethod variable, method, arguments
   # array[i] will not reach this function, so I need to figure that out.
-  method = transpileMethod method
-  return "#{method}"
+  method = transpileMethodIntoPhp method
+  if arguments == "" || arguments == " " # this check may not work; it's checking if this method is called with arguments
+    return "#{method}(#{variable})"
+  else
+    return "#{method}(#{variable}, #{arguments})"
+  end
 end
 
 def phpGenerateAttempt
