@@ -11,8 +11,6 @@ class Parser
   # this will need to be refactored to support nesting
 
   def parse token, output_language, line_number
-    # remember to turn =/= into !=
-    # PHP should also be !== instead for strict comparison
 
     # puts "DEBUG:"
     # pp token
@@ -22,6 +20,15 @@ class Parser
     when :comment
       return send("#{output_language}GenerateComment", token[:comment])
     when :variable_creation
+      if token[:var_type].nil? && output_language == "cs"
+        puts "It is not advised to omit the type when defining a variable if you are compiling Yakima to C#"
+        exit
+      end
+
+      if token[:var_type].nil?
+        return phpGenerateVariable nil, token[:name], token[:value]
+      end
+
       unless @recognized_types.include?(token[:var_type])
         puts "Invalid type assigned to #{token[:name]}: #{token[:var_type]} on line ~#{line_number}" 
         exit
@@ -54,7 +61,7 @@ class Parser
       return send("#{output_language}GenerateWhileLoop", token[:condition])
 
     when :for_loop
-      return send("#{output_language}GenerateForLoop", token[:initialization], token[:condition], token[:update])
+      return send("#{output_language}GenerateForLoop", token[:amount])
 
     when :foreach_loop
       return send("#{output_language}GenerateForeachLoop", token[:iterator], token[:array])
@@ -76,6 +83,9 @@ class Parser
 
     when :named_when_arm
       return send("#{output_language}GenerateNamedException", token[:exception], token[:name])
+
+    when :echo
+      return send("#{output_language}GenerateEcho", token[:message])
 
     when :blank_line
       return "\n"

@@ -30,14 +30,17 @@ def lex expression
       type: :comment,
       comment: $~[:comment]
     }
-  when /for\s+let\s+(?<initialization>.*)\,(?<condition>.*)\,(?<update>.*)\s+do/
+  when /echo\s+(?<message>.*)/
+    {
+      type: :echo,
+      message: $~[:message]
+    }
+  when /for\s(?<amount>\d+)\s+times\s+do/
     {
       type: :for_loop,
-      initialization: $~[:initialization],
-      condition: $~[:condition],
-      update: $~[:update]
+      amount: $~[:amount]
     }
-  when /(?<type>(boolean|int|uint|string|char))\s+(?<var_name>.*)\s=\s(?<value>.*)\Z/
+  when /(?<type>(boolean|int|uint|string|char)?)\s+(?<var_name>.*)\s=\s(?<value>.*)\Z/
     {
       type: :variable_creation,
       var_type: $~[:type],
@@ -74,7 +77,7 @@ def lex expression
       function_name: $~[:function_name],
       arguments: $~[:arguments_list]
     }
-  when /fn\s+(?<function_name>.*)\((?<arguments_list>.*?)\)\s+=>\s+(?<return_type>(boolean|int|uint|string|char))\:/
+  when /fn\s+(?<function_name>.*)\((?<arguments_list>.*?)\)\s+returns\s+(?<return_type>(boolean|int|uint|string|char))\:/
     {
       type: :function_declaration,
       function_name: $~[:function_name],

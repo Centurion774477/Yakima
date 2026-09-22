@@ -70,12 +70,10 @@ def phpGenerateWhileLoop condition
   END
 end
 
-def phpGenerateForLoop initialization, condition, update
+def phpGenerateForLoop amount
   # NEEDS TESTING
   <<-END
-  $#{initialization};
-  while ($#{condition.lstrip()}) {
-  $#{update}
+  for ($i = 0; $i < #{amount}; $i++) {
   END
 end
 
@@ -109,9 +107,9 @@ def phpGenerateMethod variable, method, arguments
   # array[i] will not reach this function, so I need to figure that out.
   method = transpileMethodIntoPhp method
   if arguments == "" || arguments == " " # this check may not work; it's checking if this method is called with arguments
-    return "#{method}(#{variable})"
+    return "#{method}(#{variable});"
   else
-    return "#{method}(#{variable}, #{arguments})"
+    return "#{method}(#{variable}, #{arguments});"
   end
 end
 
@@ -130,5 +128,11 @@ end
 def phpGenerateNamedException exception, name
   <<-END
 } catch (#{exception} #{name}) {
+  END
+end
+
+def phpGenerateEcho message
+  <<-END
+    echo #{message};
   END
 end

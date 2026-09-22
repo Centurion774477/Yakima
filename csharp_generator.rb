@@ -62,9 +62,10 @@ def csGenerateWhileLoop condition
   END
 end
 
-def csGenerateForLoop initialization, condition, update
+def csGenerateForLoop amount
+
   <<-END
-  for (#{initialization}; #{condition}; #{update}) {
+  for (var i = 0; i < #{amount}; i++) {
   END
 end
 
@@ -144,3 +145,8 @@ def csGenerateNamedException exception, name
   END
 end
 
+def csGenerateEcho message
+  <<-END
+    Console.WriteLine();
+  END
+end
