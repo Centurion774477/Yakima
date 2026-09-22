@@ -73,6 +73,8 @@ Reading from STDIN:
 
 Conditionals:
 
+Note: unlike Fortevom, Yakima does not use `=/=` for the "not equal to" operator; it uses the traditional `!=` symbol.
+
 Conditional blocks must be closed with ends
 
 ```
@@ -109,9 +111,8 @@ This is the equivalent of `if var1 == value and var2 == value`
 
 `if var1 == value and var2 doesnt then ...`
 
-This is the equivalent of `if var1 == value and var2 =/= value`
+This is the equivalent of `if var1 == value and var2 != value`
 
-Yakima uses `=/=` instead of `!=` to represent the "not equals" symbol.
 
 
 Functions:
