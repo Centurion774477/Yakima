@@ -48,6 +48,12 @@ You can alternatively declare a variable using type inferrence:
 
 `infer number = 96;`
 
+If you plan on compiling Yakima into PHP, you can optionally omit the type entirely because it's purely cosmetic. This isn't advised, however, if you are targeting C#.
+
+For example:
+
+`number = 2004`
+
 Comments are initiated with the ° (degree) symbol. On macOS, you can get this by pressing option-shift-8.
 Unicode: U+00B0
 
@@ -55,9 +61,11 @@ Unicode: U+00B0
 
 Writing to STDOUT:
 
-`write_output("hi");`
+`write_output("Helsinki");`
 
-This, naturally, will return a string.
+Alternatively, you can use `echo`. Echo is a keyword, therefore it does not require parentheses:
+
+`echo "Stockholm"`
 
 Reading from STDIN:
 
