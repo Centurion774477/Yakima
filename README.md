@@ -1,6 +1,34 @@
-# Fortevom
+# Yakima
 
-Fortevom is a C#/PHP preprocessor
+Yakima is a fork of [Fortevom](https://github.com/werSquared/fortevom).
+
+Yakima takes a more expressive approach compared to Fortevom, as well as being a bit more modern with the syntax. Some examples include:
+
+```
+for 3 times do
+end
+```
+
+As opposed to:
+
+```
+for let int i = 0, i > 3, i++ do
+end
+```
+
+Another example:
+
+```
+fn someFunction() returns string:
+end
+```
+
+Versus:
+
+```
+fn someFunction() => string:
+end
+```
 
 # Syntax
 
@@ -62,7 +90,7 @@ There are also shorthands for evaluating multiple variables against a value:
 
 This is a shortcut for `if var1 == value or var2 == value`
 
-Quick note: Fortevom uses `or` like Python does; it is the equivalent of `||` in most other languages -- 
+Quick note: Yakima uses `or` like Python does; it is the equivalent of `||` in most other languages -- 
 same with `and`; it is the equivalent of `&&`
 
 
@@ -75,7 +103,7 @@ This is the equivalent of `if var1 == value and var2 == value`
 
 This is the equivalent of `if var1 == value and var2 =/= value`
 
-Fortevom uses `=/=` instead of `!=` to represent the "not equals" symbol.
+Yakima uses `=/=` instead of `!=` to represent the "not equals" symbol.
 
 
 Functions:
@@ -90,7 +118,7 @@ fn functionNAME() => returntype:
 end
 ```
 
-Fortevom uses toggleCASE by convention; Each word alternates between no caps and all caps.
+Yakima uses toggleCASE by convention; Each word alternates between no caps and all caps.
 
 If your function takes arguments, those arguments need a type:
 
@@ -110,7 +138,7 @@ end
 
 Types
 
-Here is the list of types available in Fortevom:
+Here is the list of types available in Yakima:
 - uint
 - int
 - boolean
