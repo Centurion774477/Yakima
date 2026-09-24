@@ -35,7 +35,7 @@ def lex expression
       type: :comment,
       comment: $~[:comment]
     }
-  when /echo\s+(?<message>.*)/
+  when /(echo|scream)\s+(?<message>.*)/
     {
       type: :echo,
       message: $~[:message]
@@ -44,6 +44,18 @@ def lex expression
     {
       type: :for_loop,
       amount: $~[:amount]
+    }
+  when /^write (?<data>.*) to (?<file>.*)$/
+    {
+      type: :write_to_file,
+      data: $~[:data],
+      file: $~[:file]
+    }
+  when /^(?<variable_name>.*) = read (?<file>.*)$/
+    {
+      type: :read_from_file,
+      variable_name: $~[:variable_name],
+      file: $~[:file]
     }
   when /^(?<var_name>.*)\s=\s(?<value>.*)$\Z/
     {
@@ -81,7 +93,7 @@ def lex expression
       function_name: $~[:function_name],
       arguments: $~[:arguments_list]
     }
-  when /fn\s+(?<function_name>.*)\((?<arguments_list>.*?)\)\s+returns\s+(?<return_type>(boolean|int|uint|string|char))\:/
+  when /fn\s+(?<function_name>.*)\((?<arguments_list>.*?)\)\s+returns\s+(?<return_type>.*)\:/
     {
       type: :function_declaration,
       function_name: $~[:function_name],
@@ -109,6 +121,12 @@ def lex expression
       type: :import_as,
       package: $~[:package],
       thing: $~[:thing]
+    }
+  when /^(?<variable>.*) is (a|an) (?<class>.*)$/
+    {
+      type: :class_instance,
+      variable: $~[:variable],
+      class: $~[:class]
     }
   when /(?<variable>.*)\.(?<method>.*)\((?<arguments>.*)\)$/
     {

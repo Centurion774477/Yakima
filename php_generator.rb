@@ -52,9 +52,9 @@ def phpGenerateFunctionCall name, arguments
   END
 end
 
-def phpGenerateFunctionDeclaration name, arguments
+def phpGenerateFunctionDeclaration name, arguments, return_type
   <<~END
-  function #{name} (#{arguments})
+  function #{name} (#{arguments}): #{return_type} {
   END
 end
 
@@ -71,7 +71,6 @@ def phpGenerateWhileLoop condition
 end
 
 def phpGenerateForLoop amount
-  # NEEDS TESTING
   <<~END
   for ($i = 0; $i < #{amount}; $i++) {
   END
@@ -134,5 +133,24 @@ end
 def phpGenerateEcho message
   <<~END
     echo #{message};
+  END
+end
+
+def phpGenerateFileWrite data, file
+  <<~END
+    file_put_contents(#{file}, #{data});
+  END
+end
+
+def phpGenerateFileRead variable_name, file
+  <<~END
+    $#{variable_name} = file_get_contents(#{file});
+  END
+end
+
+def phpGenerateClassInstance variable, class_name
+  class_name = class_name.gsub(/\w+/) { |word| word.capitalize }
+  <<~END
+    $#{variable} = new #{class_name}();
   END
 end

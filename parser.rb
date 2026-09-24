@@ -92,6 +92,14 @@ class Parser
     when :echo
       return send("#{output_language}GenerateEcho", token[:message])
 
+    when :write_to_file
+      return send("#{output_language}GenerateFileWrite", token[:data], token[:file])
+
+    when :read_from_file
+      return send("#{output_language}GenerateFileRead", token[:variable_name], token[:file])
+
+    when :class_instance
+      return send("#{output_language}GenerateClassInstance", token[:variable], token[:class])
     when :fallthrough
       content = token[:content]
 
