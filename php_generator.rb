@@ -1,59 +1,59 @@
 
 def phpGenerateComment comment
-  <<-END
+  <<~END
     # #{comment}
   END
 end
 
 def phpGenerateVariable type, name, value
   # type isn't used but it's needed in the C# version and the parser doesn't know which one is going to be called
-  <<-END
+  <<~END
   $#{name} = #{value};
   END
 end
 
 def phpGenerateIf condition
-  <<-END
+  <<~END
   if (#{condition}) {
   END
 end
 
 def phpGenerateElseIf condition
-  <<-END
+  <<~END
   } elseif (#{condition}) {
   END
 end
 
 def phpGenerateElse
-  <<-END
+  <<~END
 } else {
   END
 end
 
 def phpGenerateEnd
-  <<-END
+  <<~END
 }
   END
 end
 
 def phpGenerateInferredVariable name, value
-  <<-END
+  <<~END
   $#{name} = #{value};
   END
 end
 
 def phpGenerateFunctionCall name, arguments
-  # check if its a fortevom function like write_output() or read_stdin()
+  # check if its a Yakima function like write_output() or read_stdin()
   return "echo #{arguments}"   if name == "write_output"
   return "readline()"          if name == "read_stdin"
 
-  <<-END
+  <<~END
   #{name}(#{arguments})
   END
 end
 
 def phpGenerateFunctionDeclaration name, arguments
-  <<-END
+  <<~END
   function #{name} (#{arguments})
   END
 end
@@ -61,34 +61,34 @@ end
 def phpGenerateWhileLoop condition
   # if the user is checking for a boolean value or a variable
   if condition =~ /^\w+$/
-    return <<-END
+    return <<~END
     while ($#{condition}) {
     END
   end
-  <<-END
+  <<~END
   while (#{condition}) {
   END
 end
 
 def phpGenerateForLoop amount
   # NEEDS TESTING
-  <<-END
+  <<~END
   for ($i = 0; $i < #{amount}; $i++) {
   END
 end
 
 def phpGenerateForeachLoop iterator, array
-  <<-END
+  <<~END
   foreach ($#{array} as $#{iterator}) {
   END
 end
 
 def phpGenerateImport package
-  return "// PHP doesn't have imports! -- Fortevom" # doesn't exist in PHP
+  return "// PHP doesn't have imports! -- Yakima" # doesn't exist in PHP
 end
 
 def phpGenerateImportFrom package, thing
-  return "// PHP doesn't have imports! -- Fortevom" # doesn't exist in PHP either
+  return "// PHP doesn't have imports! -- Yakima" # doesn't exist in PHP either
 end
 
 def transpileMethodIntoPhp method
@@ -114,25 +114,25 @@ def phpGenerateMethod variable, method, arguments
 end
 
 def phpGenerateAttempt
-  <<-END
+  <<~END
   try {
   END
 end
 
 def phpGenerateCatchException exception
-  <<-END
+  <<~END
 } catch (#{exception}) {
   END
 end
 
 def phpGenerateNamedException exception, name
-  <<-END
+  <<~END
 } catch (#{exception} #{name}) {
   END
 end
 
 def phpGenerateEcho message
-  <<-END
+  <<~END
     echo #{message};
   END
 end

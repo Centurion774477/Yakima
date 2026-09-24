@@ -40,10 +40,9 @@ def lex expression
       type: :for_loop,
       amount: $~[:amount]
     }
-  when /(?<type>(boolean|int|uint|string|char)?)\s+(?<var_name>.*)\s=\s(?<value>.*)\Z/
+  when /(?<var_name>.*)\s=\s(?<value>.*)\Z/
     {
       type: :variable_creation,
-      var_type: $~[:type],
       name: $~[:var_name],
       value: $~[:value]
     }
@@ -130,7 +129,8 @@ def lex expression
     }
   else
     {
-      type: :blank_line
+      type: :other,
+      content: expression
     }
   end
 end

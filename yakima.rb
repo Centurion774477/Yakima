@@ -42,8 +42,8 @@ def write snippet, file_to_write_to
   # puts snippet
   # puts "FILE:"
   # puts file_to_write_to
-
-  snippet = "#{snippet.lstrip()}\n"
+  
+  if snippet.nil? then return end
 
   begin
     File.write(file_to_write_to, snippet, mode: 'a')
@@ -53,14 +53,12 @@ def write snippet, file_to_write_to
 end
 
 def compile file, output_language
-  # fail "The file given -- #{file} -- does not the .fortevom extension." unless File.extname(file) == ".fortevom"
+  parser = Parser.new()
 
-  parser           = Parser.new()
-
-  file_to_write_to = if output_language == "php"
-    "#{File.basename(file)}.php"
+  if output_language == "php"
+    file_to_write_to = "#{File.basename(file)}.php"
   else
-    "#{File.basename(file)}.cs"
+    file_to_write_to = "#{File.basename(file)}.cs"
   end
 
   lines            = getLines file
@@ -134,12 +132,55 @@ def orchestrate file_given, output_language
   puts "Perfect! Your new file is named #{output_file}."
 end
 
+def handleEmbeddedYakima file, language
+  parser = Parser.new()
+
+  file_to_write_to = if language == "php"
+    "#{File.basename(file)}.php"
+  else
+    "#{File.basename(file)}.cs"
+  end
+
+  lines            = getLines file
+  line_number      = 0 # a rough approximate as it will be skewed if you have multiple expressions on one line
+
+  lines.each do |line|
+    line_number += 1
+    if line == ' '
+      snippets << line
+    end
+
+    expressions = getExpressions line
+
+    # puts "expressions:"
+    # expressions.each {|expression| puts expression}
+
+    expressions.each do |expression|
+      next if expression == " "
+      token = lex expression
+      
+      snippet = parser.parse(token, language, line_number, let_code_fall_through: true)
+
+      write snippet, file_to_write_to
+    end
+  end
+
+  puts "Perfect! Your new file has been generated."
+end
+
+
 case command
-when "transpile", "render", "digest" then orchestrate file_given, output_language
+when "transpile", "render", "digest"
+  if File.extname(file_given) == ".embyakima"
+    handleEmbeddedYakima file_given, output_language
+  else
+    orchestrate file_given, output_language
+    
+  end
 when "lex"                           then onlyLex file_given
 when "parse"                         then onlyParse file_given, output_language
 end
 
 # test command:
-# ruby fortevom.rb digest tests/fortevom_test.txt php
+# ruby yakima.rb digest tests/fortevom_test.txt php
 

@@ -5,12 +5,12 @@ require_relative "lexer"
 
 class Parser
   def initialize
-    @recognized_types  = %w|uint int boolean float string char obj any|
+    @recognized_types  = %w|uint int boolean float string char obj any infer|
   end
   
   # this will need to be refactored to support nesting
 
-  def parse token, output_language, line_number
+  def parse token, output_language, line_number, let_code_fall_through = false
 
     # puts "DEBUG:"
     # pp token
@@ -29,7 +29,7 @@ class Parser
         return phpGenerateVariable nil, token[:name], token[:value]
       end
 
-      unless @recognized_types.include?(token[:var_type])
+      unless @recognized_types.include?(token[:var_type].strip)
         puts "Invalid type assigned to #{token[:name]}: #{token[:var_type]} on line ~#{line_number}" 
         exit
       end
@@ -87,8 +87,15 @@ class Parser
     when :echo
       return send("#{output_language}GenerateEcho", token[:message])
 
-    when :blank_line
-      return "\n"
+    when :other
+      # if content is blank or something weird
+      unless token[:content].match(/\w+/)
+        return "\n"
+      end
+
+      if let_code_fall_through == true
+        return token[:content]
+      end
     else
       puts "Unrecognized token on line #{line_number}: #{token}"
       exit
