@@ -59,7 +59,7 @@ Unicode: U+00B0
 
 `° This is a comment `
 
-Writing to STDOUT:
+## Writing to STDOUT:
 
 `write_output("Helsinki");`
 
@@ -67,11 +67,11 @@ Alternatively, you can use `echo`. Echo is a keyword, therefore it does not requ
 
 `echo "Stockholm"`
 
-Reading from STDIN:
+## Reading from STDIN:
 
 `read_stdin();`
 
-Conditionals:
+## Conditionals:
 
 Note: unlike Fortevom, Yakima does not use `=/=` for the "not equal to" operator; it uses the traditional `!=` symbol.
 
@@ -82,13 +82,15 @@ if condition then
   ° ...
 alternatively condition then
   ° ...
-otherwise do 
+otherwise then
    ° ...
 end
 ```
 
 Alternatively is the equivalent of elsif, elseif, or elif;
 Otherwise is the equivalent of else.
+
+If you wish, you could use `if all else fails then` instead of `otherwise then`.
 
 You can also use the alternate inline conditional. This has the exact same syntax as Ruby:
 
@@ -100,7 +102,7 @@ There are also shorthands for evaluating multiple variables against a value:
 
 This is a shortcut for `if var1 == value or var2 == value`
 
-Quick note: Yakima uses `or` like Python does; it is the equivalent of `||` in most other languages -- 
+Quick note: Yakima uses `or` like CoffeeScript or Python does; it is the equivalent of `||` in most other languages -- 
 same with `and`; it is the equivalent of `&&`
 
 
@@ -115,15 +117,15 @@ This is the equivalent of `if var1 == value and var2 != value`
 
 
 
-Functions:
+## Functions:
 
 Functions are declared using the `fn` keyword:
 
 You must declare a return type
 
 ```
-fn functionNAME() => returntype:
-  <logic>
+fn functionNAME() returns returntype:
+  echo "I won't let this drain the life out of me";
 end
 ```
 
@@ -145,7 +147,7 @@ fn someFUNCTION(any argument, any argumentTWO) => string:
 end
 ```
 
-Types
+## Types
 
 Here is the list of types available in Yakima:
 - uint
@@ -157,7 +159,7 @@ Here is the list of types available in Yakima:
 - obj
 - any/inferred
 
-Loops:
+## Loops:
 
 ```
 while condition do
@@ -176,7 +178,7 @@ for thing in things do
 end 
 ```
 
-Imports:
+## Imports:
 
 `import <thing>`
 
@@ -184,7 +186,7 @@ Alternatively, you can import a specific thing:
 
 `from <folderORfile> import <thing>`
 
-Arrays:
+## Arrays:
 
 `array.length;` => returns the amount of items in an array
 
@@ -202,19 +204,7 @@ Arrays:
 
 `array.tail` => last index
 
-Objects:
-
-Objects are declared using the obj type and curly brackets.
-
-Keys and values are separated by the `==>` symbol.
-
-```
-obj object = {
-  "key" ==> value 
-}
-```
-
-Error handling:
+## Exception handling:
 
 ```
 attempt {
@@ -223,6 +213,25 @@ attempt {
 when EXCEPTIONcode {
   ° what to do if it breaks
 }
+```
+
+## File Utilities
+
+```
+write "Finland is beautiful" to "config.kyo";
+```
+
+```
+howGoodIsFinland = read "config.kyo";
+```
+
+## Classes
+
+I'll admit. Yakima is pretty bare on classes and OOP, especially considering it compiles into PHP and C#. I'm actively working on the OOP aspects.
+
+class instantiation:
+```
+Iceland is a GoodCountry;
 ```
 
 Purified using [Murman](https://github.com/Centurion774477/Murman)
