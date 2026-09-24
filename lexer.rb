@@ -25,6 +25,11 @@ end
 # returns a hash containing the data about the given expression
 def lex expression
   return case expression
+  when /^\s*>(?<content>.*)$/
+    {
+      type: :fallthrough,
+      content: $~[:content]
+    }
   when /°(?<comment>.*)/
     {
       type: :comment,
@@ -40,7 +45,7 @@ def lex expression
       type: :for_loop,
       amount: $~[:amount]
     }
-  when /(?<var_name>.*)\s=\s(?<value>.*)\Z/
+  when /^(?<var_name>.*)\s=\s(?<value>.*)$\Z/
     {
       type: :variable_creation,
       name: $~[:var_name],
@@ -56,7 +61,7 @@ def lex expression
       type: :alternative_condition,
       condition: $~[:condition]
     }
-  when /otherwise/
+  when /(otherwise)|(if all else fails then)/
     {
       type: :otherwise_condition
     }

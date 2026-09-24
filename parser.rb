@@ -8,9 +8,7 @@ class Parser
     @recognized_types  = %w|uint int boolean float string char obj any infer|
   end
   
-  # this will need to be refactored to support nesting
-
-  def parse token, output_language, line_number, let_code_fall_through = false
+  def parse token, output_language, line_number, let_code_fall_through = true
 
     # puts "DEBUG:"
     # pp token
@@ -37,10 +35,17 @@ class Parser
       return send("#{output_language}GenerateVariable", token[:var_type], token[:name], token[:value])
 
     when :if_condition
-      return send("#{output_language}GenerateIf", token[:condition])
+      condition = token[:condition]
+
+      condition = condition.gsub("is", "==")
+      return send("#{output_language}GenerateIf", condition)
 
     when :alternative_condition
-      return send("#{output_language}GenerateElseIf", token[:condition])
+      condition = token[:condition]
+
+      
+      condition = condition.gsub("is", "==")
+      return send("#{output_language}GenerateElseIf", condition)
 
     when :otherwise_condition
       return send("#{output_language}GenerateElse")
@@ -87,8 +92,16 @@ class Parser
     when :echo
       return send("#{output_language}GenerateEcho", token[:message])
 
+    when :fallthrough
+      content = token[:content]
+
+      if content.match?(/[{};]\s*$/)
+        return "#{content}\n"
+      else
+        return "#{token[:content]};\n"
+      end
     when :other
-      # if content is blank or something weird
+      # guard against if content is blank or something weird
       unless token[:content].match(/\w+/)
         return "\n"
       end
